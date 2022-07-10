@@ -5,6 +5,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        // var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         var builder = WebApplication.CreateBuilder(args);
         
         // Add services to the container.
@@ -13,6 +15,15 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+        builder.Services.AddCors();
+        // builder.Services.AddCors(options =>
+        // {
+        //     options.AddPolicy(name: MyAllowSpecificOrigins,
+        //                     policy  =>
+        //                     {
+        //                         policy.WithOrigins("http://localhost:4200");
+        //                     });
+        // });
 
         var app = builder.Build();
         //IConfiguration configuration = app.Configuration;
@@ -25,6 +36,11 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        
+        app.UseRouting();
+
+        // app.UseCors(MyAllowSpecificOrigins);
+        app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
         app.UseAuthorization();
 
