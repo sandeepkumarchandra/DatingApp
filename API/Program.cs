@@ -1,5 +1,6 @@
 using System.Text;
 using API.Data;
+using API.Data.Helpers;
 using API.Interfaces;
 using API.Middleware;
 using API.Services;
@@ -9,18 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 
 internal class Program
 {
-    private readonly IConfiguration _config;
-
-    public Program(IConfiguration config)
+    private static async Task Main(string[] args)
     {
-        _config = config;
-    }
-    private static void Main(string[] args)
-    {
-        // var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         // Add services to the container.
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,23 +33,30 @@ internal class Program
                 ValidateAudience=false
             };
         });
-        // builder.Services.AddCors(options =>
-        // {
-        //     options.AddPolicy(name: MyAllowSpecificOrigins,
-        //                     policy  =>
-        //                     {
-        //                         policy.WithOrigins("http://localhost:4200");
-        //                     });
-        // });
 
         var app = builder.Build();
-        //IConfiguration configuration = app.Configuration;
+
+
         
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        }
+
+        //for seeding data into database
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        try{
+            var conext = services.GetRequiredService<DataContext>();
+            await conext.Database.MigrateAsync();
+            await Seed.SeedUsers(conext);
+        }
+        catch(Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex,"An error occoured during migraiton");
         }
 
         app.UseMiddleware<ExceptionMiddleware>();
@@ -72,6 +74,6 @@ internal class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
