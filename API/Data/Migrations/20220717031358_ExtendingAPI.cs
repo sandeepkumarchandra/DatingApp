@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Data.Migrations
 {
-    public partial class ExtendedUserEntity : Migration
+    public partial class ExtendingAPI : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,13 @@ namespace API.Data.Migrations
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "LastActive",
+                table: "users",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<string>(
                 name: "LookingFor",
@@ -135,6 +142,10 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "KnownAs",
+                table: "users");
+
+            migrationBuilder.DropColumn(
+                name: "LastActive",
                 table: "users");
 
             migrationBuilder.DropColumn(

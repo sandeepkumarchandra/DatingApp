@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220716115651_ExtendedUserEntity")]
-    partial class ExtendedUserEntity
+    [Migration("20220717031358_ExtendingAPI")]
+    partial class ExtendingAPI
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,6 +61,9 @@ namespace API.Data.Migrations
                     b.Property<string>("KnownAs")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastActive")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LookingFor")
                         .IsRequired()

@@ -60,6 +60,9 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastActive")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LookingFor")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
