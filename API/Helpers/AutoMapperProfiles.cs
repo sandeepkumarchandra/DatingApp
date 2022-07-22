@@ -7,7 +7,7 @@ using API.Entities;
 using API.Extentions;
 using AutoMapper;
 
-namespace API.Data.Helpers
+namespace API.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
