@@ -17,6 +17,7 @@ internal class Program
         builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<LogUserActivity>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         // Add services to the container.
@@ -24,7 +25,11 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"), builder => builder.UseRowNumberForPaging()));
+        //builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+        builder.Services.AddDbContext<DataContext>(options =>
+        {
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+        });
         builder.Services.AddCors();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options => {
@@ -36,7 +41,7 @@ internal class Program
                 ValidateAudience=false
             };
         });
-
+ 
         var app = builder.Build();
 
 

@@ -14,8 +14,9 @@ namespace API.Helpers
             TotalPages = (int) Math.Ceiling(count / (double)pageSize);
             PageSize = pageSize;
             TotalCount = count;
+            this.items=items;
         }
-
+        public IEnumerable<T> items { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int PageSize { get; set; }
