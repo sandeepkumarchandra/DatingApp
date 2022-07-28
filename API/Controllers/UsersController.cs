@@ -47,7 +47,7 @@ namespace API.Controllers
 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             
-            return Ok(users.items);
+            return Ok(users);
         }
 
         [HttpGet("{username}", Name="GetUser")]

@@ -20,6 +20,7 @@ internal class Program
         builder.Services.AddScoped<ILikesRepository, LikesRepository>();
         builder.Services.AddScoped<LogUserActivity>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IMessageRepository, MessageRepository>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         // Add services to the container.
         builder.Services.AddControllers();
