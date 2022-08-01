@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+											   
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -32,6 +33,11 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from 'ngx-timeago';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';			
+import { RolesModalComponent } from './Modals/roles-modal/roles-modal.component';
 
 @NgModule({
   declarations: [
@@ -51,9 +57,15 @@ import { MemberMessagesComponent } from './members/member-messages/member-messag
     PhotoEditorsComponent,
     TextInputComponent,
     DateInputComponent,
-    MemberMessagesComponent
+    MemberMessagesComponent,
+		AdminPanelComponent,
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModalComponent			
   ],
   imports: [
+				 
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

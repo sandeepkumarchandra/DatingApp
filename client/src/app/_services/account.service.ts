@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { isArray } from 'ngx-bootstrap/chronos';
 import { map, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private presence: PresenceService) { }
 
   login(model:any)
   {
@@ -21,6 +23,7 @@ export class AccountService {
           const user = response;
           if(user){
             this.setCurrentUser(user);
+            this.presence.createHubConnection(user);
           }
         })
       )
@@ -32,6 +35,7 @@ export class AccountService {
         if(user)
         {
           this.setCurrentUser(user);
+          this.presence.createHubConnection(user);
         }
         return user;
       }
@@ -39,6 +43,9 @@ export class AccountService {
   }
 
   setCurrentUser(user:User){
+    user.roles=[];
+    const roles = this.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     this.currentUserSource.next(user);
     localStorage.setItem('user',JSON.stringify(user));
   }
@@ -46,5 +53,10 @@ export class AccountService {
   {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presence.stopHubConnection();
+  }
+
+  getDecodedToken(token){
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
