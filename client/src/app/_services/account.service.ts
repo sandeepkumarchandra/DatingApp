@@ -57,6 +57,7 @@ export class AccountService {
   }
 
   getDecodedToken(token){
+    // if(token != null)
     return JSON.parse(atob(token.split('.')[1]));
   }
 }
